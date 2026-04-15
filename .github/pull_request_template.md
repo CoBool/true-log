@@ -1,22 +1,22 @@
-## Summary
+## 요약
 
-- Describe the goal of this PR in 1-3 short bullets.
+- 이 PR의 목적을 1~3개의 짧은 항목으로 적어주세요.
 
-## Changes
+## 변경 사항
 
-- List the main implementation changes.
-- Focus on user-facing behavior or architectural impact.
+- 주요 구현 변경 사항을 적어주세요.
+- 사용자 영향이나 구조적 변화 중심으로 적어주세요.
 
-## Validation
+## 검증
 
-- List the checks you ran.
-- Include only checks that actually passed.
+- 실제로 실행해서 통과한 검증만 적어주세요.
+- 예: `npm run lint`, `npm run check`, `npm run build`
 
-## Risks
+## 리스크
 
-- Call out follow-up work, known gaps, or rollout concerns.
-- Write `None` if there are no known risks.
+- 후속 작업, 알려진 한계, 배포 시 주의점을 적어주세요.
+- 특별한 리스크가 없으면 `없음`으로 적어주세요.
 
-## Notes
+## 참고 사항
 
-- Link related issues, design notes, or follow-up PRs when relevant.
+- 관련 이슈, 설계 문서, 후속 PR이 있으면 적어주세요.
