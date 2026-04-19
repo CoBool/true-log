@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
 
 	let { data } = $props<{ data: PageData }>();
 
 	const formatDate = (value: string) =>
-		new Intl.DateTimeFormat('en', {
-			dateStyle: 'medium'
-		}).format(new Date(`${value}T00:00:00`));
+		new Intl.DateTimeFormat('ko-KR', {
+			dateStyle: 'long',
+			timeZone: 'Asia/Seoul'
+		}).format(new Date(`${value}T00:00:00+09:00`));
 </script>
 
 <svelte:head>
@@ -122,7 +124,7 @@
 
 			<a
 				class="inline-flex items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-slate-950"
-				href="/"
+				href={resolve('/')}
 			>
 				Back to posts
 			</a>

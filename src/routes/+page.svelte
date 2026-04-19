@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
 
 	let { data } = $props<{ data: PageData }>();
@@ -22,7 +23,10 @@
 						<div class="flex flex-wrap items-start justify-between gap-3">
 							<div class="min-w-0 space-y-2">
 								<h2 class="text-lg font-semibold leading-snug text-slate-950">
-									<a class="transition hover:text-sky-700" href={`/posts/${post.slug}`}>
+									<a
+										class="transition hover:text-sky-700"
+										href={resolve('/posts/[slug]', { slug: post.slug })}
+									>
 										{post.title}
 									</a>
 								</h2>
@@ -56,7 +60,7 @@
 						<div>
 							<a
 								class="inline-flex items-center text-sm font-medium text-sky-700 hover:text-sky-800"
-								href={`/posts/${post.slug}`}
+								href={resolve('/posts/[slug]', { slug: post.slug })}
 							>
 								Read post
 							</a>
