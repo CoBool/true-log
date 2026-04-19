@@ -1,14 +1,49 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
+	import { tick } from 'svelte';
 	import type { PageData } from './$types';
+	import 'katex/dist/katex.min.css';
 
 	let { data } = $props<{ data: PageData }>();
+	let contentElement: HTMLDivElement | undefined;
 
 	const formatDate = (value: string) =>
 		new Intl.DateTimeFormat('ko-KR', {
 			dateStyle: 'long',
 			timeZone: 'Asia/Seoul'
 		}).format(new Date(`${value}T00:00:00+09:00`));
+
+	async function renderMermaid() {
+		if (!browser || !data.post.meta.hasMermaid || !contentElement) {
+			return;
+		}
+
+		await tick();
+
+		const diagrams = Array.from(contentElement.querySelectorAll('pre.mermaid')) as HTMLElement[];
+
+		if (diagrams.length === 0) {
+			return;
+		}
+
+		const mermaid = (await import('mermaid')).default;
+
+		mermaid.initialize({
+			startOnLoad: false,
+			securityLevel: 'loose',
+			theme: 'neutral'
+		});
+
+		await mermaid.run({
+			nodes: diagrams
+		});
+	}
+
+	$effect(() => {
+		void data.post.html;
+		void renderMermaid();
+	});
 </script>
 
 <svelte:head>
@@ -81,7 +116,10 @@
 			</section>
 
 			<section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div class="prose max-w-none prose-slate prose-headings:scroll-mt-24 prose-a:text-sky-700">
+				<div
+					bind:this={contentElement}
+					class="prose max-w-none prose-slate prose-headings:scroll-mt-24 prose-a:text-sky-700"
+				>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html data.post.html}
 				</div>

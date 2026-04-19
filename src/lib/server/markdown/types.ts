@@ -21,6 +21,12 @@ export interface ContentMeta {
 
 export interface ParseOptions {
 	toc?: false | TocOptions;
+	math?: boolean;
+	mermaid?: boolean;
+	theme?: {
+		light?: string;
+		dark?: string;
+	};
 }
 
 export interface ParseResult {
