@@ -22,7 +22,9 @@
 						<div class="flex flex-wrap items-start justify-between gap-3">
 							<div class="min-w-0 space-y-2">
 								<h2 class="text-lg font-semibold leading-snug text-slate-950">
-									{post.title}
+									<a class="transition hover:text-sky-700" href={`/posts/${post.slug}`}>
+										{post.title}
+									</a>
 								</h2>
 
 								{#if post.description}
@@ -49,6 +51,15 @@
 							<span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-700">
 								{post.readingTime} min read
 							</span>
+						</div>
+
+						<div>
+							<a
+								class="inline-flex items-center text-sm font-medium text-sky-700 hover:text-sky-800"
+								href={`/posts/${post.slug}`}
+							>
+								Read post
+							</a>
 						</div>
 
 						{#if post.tags.length > 0}
