@@ -53,7 +53,7 @@
 
 						{#if post.tags.length > 0}
 							<div class="flex flex-wrap gap-2">
-								{#each post.tags as tag}
+								{#each post.tags as tag (tag)}
 									<span class="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600">
 										#{tag}
 									</span>
