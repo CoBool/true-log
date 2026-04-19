@@ -3,18 +3,21 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
-import { loadPosts } from './loader';
+import { loadPostBySlug, loadPostSummaries, loadPosts } from './loader';
 
 const postsDir = join(process.cwd(), 'content/posts');
+const sampleSlug = 'content-engine-spike';
 const laterPostPath = join(postsDir, '2099-01-02-later-post.md');
 const mismatchedPostPath = join(postsDir, '2099-01-03-mismatch-post.md');
 
-async function writePost(path: string, frontmatterDate: string, body: string): Promise<void> {
+async function writePost(
+	path: string,
+	frontmatterDate: string,
+	body: string,
+	title = basename(path).replace(/\.md$/, '')
+): Promise<void> {
 	await mkdir(postsDir, { recursive: true });
-	await writeFile(
-		path,
-		`---\ntitle: '${basename(path).replace(/\.md$/, '')}'\ndate: ${frontmatterDate}\n---\n\n${body}\n`
-	);
+	await writeFile(path, `---\ntitle: '${title}'\ndate: ${frontmatterDate}\n---\n\n${body}\n`);
 }
 
 afterEach(async () => {
@@ -24,7 +27,8 @@ afterEach(async () => {
 
 describe('loadPosts', () => {
 	it('loads markdown posts and sorts them by published date descending', async () => {
-		await writePost(laterPostPath, '2099-01-02', '## Later post\n\nA newer post.');
+		await mkdir(postsDir, { recursive: true });
+		await writePost(laterPostPath, '2099-01-02', '## Later post\n\nA newer post.', '2099-01-02-later-post');
 
 		const posts = await loadPosts();
 		const contentEngineSpike = posts.find((post) => post.slug === 'content-engine-spike');
@@ -56,5 +60,48 @@ describe('loadPosts', () => {
 		await writePost(mismatchedPostPath, '2099-01-04', '## Broken post\n\nThis should fail.');
 
 		await expect(loadPosts()).rejects.toThrow();
+	});
+});
+
+describe('loadPostBySlug', () => {
+	it('loads a post by slug', async () => {
+		const post = await loadPostBySlug(sampleSlug);
+
+		expect(post).toMatchObject({
+			slug: sampleSlug,
+			publishedAt: '2026-04-19',
+			frontmatter: {
+				date: '2026-04-19',
+				title: 'True Log Content Engine Spike'
+			}
+		});
+		expect(post?.html).toContain('<h2');
+	});
+
+	it('returns null when the slug does not exist', async () => {
+		await expect(loadPostBySlug('does-not-exist')).resolves.toBeNull();
+	});
+});
+
+describe('loadPostSummaries', () => {
+	it('derives list item summaries from parsed posts', async () => {
+		const summaries = await loadPostSummaries();
+		const summary = summaries.find((item) => item.slug === sampleSlug);
+
+		expect(summary).toMatchObject({
+			slug: sampleSlug,
+			title: 'True Log Content Engine Spike',
+			description:
+				'콘텐츠 엔진 스파이크에서 메타데이터, TOC, 렌더링 결과를 한 번에 검증하기 위한 샘플 포스트',
+			publishedAt: '2026-04-19',
+			category: 'Tech/SvelteKit',
+			tags: ['SvelteKit', 'Tailwind CSS', 'shadcn-svelte', 'Markdown Pipeline'],
+			image: {
+				path: '/images/posts/content-engine-spike/cover.png',
+				alt: '콘텐츠 엔진 스파이크 커버 이미지'
+			},
+			pin: true,
+			readingTime: expect.any(Number)
+		});
 	});
 });

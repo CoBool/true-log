@@ -4,7 +4,7 @@ import { join, relative } from 'node:path';
 import { parseMarkdown } from '../markdown';
 import { parsePostFrontmatter } from './frontmatter-schema';
 import { parsePostSlug } from './slug';
-import type { ParsedPost } from './types';
+import type { ParsedPost, PostListItem } from './types';
 
 const postsDir = join(process.cwd(), 'content/posts');
 
@@ -16,6 +16,23 @@ export async function loadPosts(): Promise<ParsedPost[]> {
 	const posts = await Promise.all(filenames.map(loadPost));
 
 	return posts.sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
+}
+
+export async function loadPostBySlug(slug: string): Promise<ParsedPost | null> {
+	const filenames = (await readdir(postsDir)).filter((filename) => filename.endsWith('.md'));
+	const filename = filenames.find((candidate) => parsePostSlug(candidate).slug === slug);
+
+	if (!filename) {
+		return null;
+	}
+
+	return loadPost(filename);
+}
+
+export async function loadPostSummaries(): Promise<PostListItem[]> {
+	const posts = await loadPosts();
+
+	return posts.map(toPostListItem);
 }
 
 async function loadPost(filename: string): Promise<ParsedPost> {
@@ -43,6 +60,27 @@ async function loadPost(filename: string): Promise<ParsedPost> {
 		html: parsed.html,
 		toc: parsed.toc,
 		meta: parsed.meta
+	};
+}
+
+function toPostListItem(post: ParsedPost): PostListItem {
+	const {
+		frontmatter: { category, description, image, pin, tags, title },
+		meta: { readingTime },
+		publishedAt,
+		slug
+	} = post;
+
+	return {
+		slug,
+		title,
+		description,
+		publishedAt,
+		category,
+		tags,
+		image,
+		pin,
+		readingTime
 	};
 }
 

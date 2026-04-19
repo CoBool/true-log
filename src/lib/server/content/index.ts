@@ -1,1 +1,1 @@
-export { loadPosts } from './loader';
+export { loadPostBySlug, loadPostSummaries, loadPosts } from './loader';
