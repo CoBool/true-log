@@ -1,15 +1,37 @@
-export interface ContentImage {
+import type { TocLink } from '../markdown/types';
+
+export interface ParsedFrontmatterImage {
 	path: string;
-	alt: string;
+	alt?: string;
 }
 
-export interface ContentFrontmatter {
+export interface ParsedFrontmatter {
 	title: string;
-	date: Date;
-	description: string;
-	category: string;
+	date: string;
+	description?: string;
+	category?: string;
+	tags?: string[];
+	image?: ParsedFrontmatterImage;
+	pin?: boolean;
+	toc?: boolean;
+}
+
+export interface ParsedPost {
+	slug: string;
+	relativePath: string;
+	frontmatter: ParsedFrontmatter;
+	html: string;
+	toc: TocLink[];
+}
+
+export interface PostListItem {
+	slug: string;
+	title: string;
+	date: string;
+	description?: string;
+	category?: string;
 	tags: string[];
-	image?: ContentImage;
-	pin: boolean;
-	toc: boolean;
+	image?: ParsedFrontmatterImage;
+	pin?: boolean;
+	toc?: boolean;
 }
