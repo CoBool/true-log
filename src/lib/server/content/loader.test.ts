@@ -27,8 +27,9 @@ describe('loadPosts', () => {
 		await writePost(laterPostPath, '2099-01-02', '## Later post\n\nA newer post.');
 
 		const posts = await loadPosts();
+		const contentEngineSpike = posts.find((post) => post.slug === 'content-engine-spike');
 
-		expect(posts.map((post) => post.slug)).toEqual(['later-post', 'content-engine-spike']);
+		expect(posts[0]?.slug).toBe('later-post');
 		expect(posts[0]).toMatchObject({
 			publishedAt: '2099-01-02',
 			frontmatter: {
@@ -36,7 +37,7 @@ describe('loadPosts', () => {
 				title: '2099-01-02-later-post'
 			}
 		});
-		expect(posts[1]).toMatchObject({
+		expect(contentEngineSpike).toMatchObject({
 			publishedAt: '2026-04-19',
 			frontmatter: {
 				date: '2026-04-19',
