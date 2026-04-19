@@ -14,10 +14,10 @@ export const frontmatterSchema = z.object({
 	date: trimmedString,
 	description: trimmedString.optional(),
 	category: trimmedString.optional(),
-	tags: z.array(trimmedString).optional(),
+	tags: z.array(trimmedString).default([]),
 	image: imageSchema.optional(),
-	pin: z.boolean().optional(),
-	toc: z.boolean().optional()
+	pin: z.boolean().default(false),
+	toc: z.boolean().default(true)
 }) satisfies z.ZodType<ParsedFrontmatter>;
 
 export function parsePostFrontmatter(input: unknown): ParsedFrontmatter {

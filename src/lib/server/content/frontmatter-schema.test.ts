@@ -11,7 +11,10 @@ describe('parsePostFrontmatter', () => {
 			})
 		).toEqual({
 			title: 'True Log Content Engine Spike',
-			date: '2026-04-19'
+			date: '2026-04-19',
+			tags: [],
+			pin: false,
+			toc: true
 		});
 	});
 
