@@ -1,3 +1,37 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+.prose [data-rehype-pretty-code-figure] {
+	margin: 1.75rem 0;
+	overflow: hidden;
+	border: 1px solid rgb(226 232 240);
+	border-radius: 1rem;
+	background-color: #0f172a;
+}
+
+.prose [data-rehype-pretty-code-figure] pre {
+	margin: 0;
+	padding: 1rem 1.25rem;
+	overflow-x: auto;
+	background: transparent;
+}
+
+.prose [data-rehype-pretty-code-figure] code {
+	display: grid;
+	min-width: 100%;
+	background: transparent;
+	font-size: 0.9rem;
+	line-height: 1.75;
+	color: #e2e8f0;
+}
+
+.prose [data-rehype-pretty-code-figure] [data-line] span {
+	color: var(--shiki-dark);
+}
+
+.prose pre code {
+	background: transparent;
+	border-radius: 0;
+	padding: 0;
+}
