@@ -9,4 +9,12 @@ describe('parsePostSlug', () => {
 			slug: 'true-log-content-engine-spike'
 		});
 	});
+
+	it('rejects a filename without a date prefix', () => {
+		expect(() => parsePostSlug('true-log-content-engine-spike.md')).toThrow();
+	});
+
+	it('rejects a filename with a missing slug segment', () => {
+		expect(() => parsePostSlug('2026-04-19-.md')).toThrow();
+	});
 });
