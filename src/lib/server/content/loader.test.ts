@@ -9,6 +9,8 @@ const postsDir = join(process.cwd(), 'content/posts');
 const sampleSlug = 'content-engine-spike';
 const laterPostPath = join(postsDir, '2099-01-02-later-post.md');
 const mismatchedPostPath = join(postsDir, '2099-01-03-mismatch-post.md');
+const duplicateEarlierPostPath = join(postsDir, '2099-01-03-duplicate-post.md');
+const duplicateLaterPostPath = join(postsDir, '2099-01-04-duplicate-post.md');
 
 async function writePost(
 	path: string,
@@ -23,6 +25,8 @@ async function writePost(
 afterEach(async () => {
 	await rm(laterPostPath, { force: true });
 	await rm(mismatchedPostPath, { force: true });
+	await rm(duplicateEarlierPostPath, { force: true });
+	await rm(duplicateLaterPostPath, { force: true });
 });
 
 describe('loadPosts', () => {
@@ -61,6 +65,23 @@ describe('loadPosts', () => {
 
 		await expect(loadPosts()).rejects.toThrow();
 	});
+
+	it('rejects posts with duplicate slugs across different dates', async () => {
+		await writePost(
+			duplicateEarlierPostPath,
+			'2099-01-03',
+			'## Earlier duplicate\n\nThis should fail.',
+			'Earlier duplicate'
+		);
+		await writePost(
+			duplicateLaterPostPath,
+			'2099-01-04',
+			'## Later duplicate\n\nThis should also fail.',
+			'Later duplicate'
+		);
+
+		await expect(loadPosts()).rejects.toThrow(/Duplicate post slug/);
+	});
 });
 
 describe('loadPostBySlug', () => {
@@ -80,6 +101,23 @@ describe('loadPostBySlug', () => {
 
 	it('returns null when the slug does not exist', async () => {
 		await expect(loadPostBySlug('does-not-exist')).resolves.toBeNull();
+	});
+
+	it('rejects duplicate slugs instead of returning an arbitrary post', async () => {
+		await writePost(
+			duplicateEarlierPostPath,
+			'2099-01-03',
+			'## Earlier duplicate\n\nThis should fail.',
+			'Earlier duplicate'
+		);
+		await writePost(
+			duplicateLaterPostPath,
+			'2099-01-04',
+			'## Later duplicate\n\nThis should also fail.',
+			'Later duplicate'
+		);
+
+		await expect(loadPostBySlug('duplicate-post')).rejects.toThrow(/Duplicate post slug/);
 	});
 });
 

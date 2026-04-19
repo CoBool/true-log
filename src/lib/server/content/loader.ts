@@ -9,9 +9,7 @@ import type { ParsedPost, PostListItem } from './types';
 const postsDir = join(process.cwd(), 'content/posts');
 
 export async function loadPosts(): Promise<ParsedPost[]> {
-	const filenames = (await readdir(postsDir))
-		.filter((filename) => filename.endsWith('.md'))
-		.sort();
+	const filenames = await listPostFilenames();
 
 	const posts = await Promise.all(filenames.map(loadPost));
 
@@ -19,14 +17,18 @@ export async function loadPosts(): Promise<ParsedPost[]> {
 }
 
 export async function loadPostBySlug(slug: string): Promise<ParsedPost | null> {
-	const filenames = (await readdir(postsDir)).filter((filename) => filename.endsWith('.md'));
-	const filename = filenames.find((candidate) => parsePostSlug(candidate).slug === slug);
+	const filenames = await listPostFilenames();
+	const matches = filenames.filter((candidate) => parsePostSlug(candidate).slug === slug);
 
-	if (!filename) {
+	if (matches.length === 0) {
 		return null;
 	}
 
-	return loadPost(filename);
+	if (matches.length > 1) {
+		throw new Error(`Duplicate post slug detected: ${slug}`);
+	}
+
+	return loadPost(matches[0]);
 }
 
 export async function loadPostSummaries(): Promise<PostListItem[]> {
@@ -90,4 +92,31 @@ function normalizeFrontmatterDate(date: unknown): unknown {
 	}
 
 	return date;
+}
+
+async function listPostFilenames(): Promise<string[]> {
+	const filenames = (await readdir(postsDir))
+		.filter((filename) => filename.endsWith('.md'))
+		.sort();
+
+	assertUniqueSlugs(filenames);
+
+	return filenames;
+}
+
+function assertUniqueSlugs(filenames: string[]): void {
+	const slugToFilename = new Map<string, string>();
+
+	for (const filename of filenames) {
+		const { slug } = parsePostSlug(filename);
+		const existingFilename = slugToFilename.get(slug);
+
+		if (existingFilename) {
+			throw new Error(
+				`Duplicate post slug detected: ${slug} (${existingFilename}, ${filename})`
+			);
+		}
+
+		slugToFilename.set(slug, filename);
+	}
 }
