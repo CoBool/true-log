@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
+	import 'katex/dist/katex.min.css';
 
 	let { data } = $props<{ data: PageData }>();
 	let contentElement: HTMLDivElement | undefined;
