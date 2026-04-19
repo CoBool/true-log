@@ -32,7 +32,12 @@ afterEach(async () => {
 describe('loadPosts', () => {
 	it('loads markdown posts and sorts them by published date descending', async () => {
 		await mkdir(postsDir, { recursive: true });
-		await writePost(laterPostPath, '2099-01-02', '## Later post\n\nA newer post.', '2099-01-02-later-post');
+		await writePost(
+			laterPostPath,
+			'2099-01-02',
+			'## Later post\n\nA newer post.',
+			'2099-01-02-later-post'
+		);
 
 		const posts = await loadPosts();
 		const contentEngineSpike = posts.find((post) => post.slug === 'content-engine-spike');

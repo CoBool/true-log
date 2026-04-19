@@ -22,7 +22,7 @@
 	<div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
 		<article class="space-y-8">
 			<header class="space-y-4 border-b border-slate-200 pb-6">
-				<p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500">Post detail</p>
+				<p class="text-xs font-medium tracking-[0.2em] text-slate-500 uppercase">Post detail</p>
 				<div class="space-y-3">
 					<h1 class="text-4xl font-semibold tracking-tight text-slate-950">
 						{data.post.frontmatter.title}
@@ -81,7 +81,8 @@
 			</section>
 
 			<section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div class="prose prose-slate max-w-none prose-headings:scroll-mt-24 prose-a:text-sky-700">
+				<div class="prose max-w-none prose-slate prose-headings:scroll-mt-24 prose-a:text-sky-700">
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html data.post.html}
 				</div>
 			</section>
@@ -89,7 +90,7 @@
 
 		<aside class="space-y-4 lg:sticky lg:top-8 lg:self-start">
 			<div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-				<p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500">On this page</p>
+				<p class="text-xs font-medium tracking-[0.2em] text-slate-500 uppercase">On this page</p>
 
 				{#if data.post.toc.length > 0}
 					<nav class="mt-4 space-y-2 text-sm">

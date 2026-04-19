@@ -95,9 +95,7 @@ function normalizeFrontmatterDate(date: unknown): unknown {
 }
 
 async function listPostFilenames(): Promise<string[]> {
-	const filenames = (await readdir(postsDir))
-		.filter((filename) => filename.endsWith('.md'))
-		.sort();
+	const filenames = (await readdir(postsDir)).filter((filename) => filename.endsWith('.md')).sort();
 
 	assertUniqueSlugs(filenames);
 
@@ -112,9 +110,7 @@ function assertUniqueSlugs(filenames: string[]): void {
 		const existingFilename = slugToFilename.get(slug);
 
 		if (existingFilename) {
-			throw new Error(
-				`Duplicate post slug detected: ${slug} (${existingFilename}, ${filename})`
-			);
+			throw new Error(`Duplicate post slug detected: ${slug} (${existingFilename}, ${filename})`);
 		}
 
 		slugToFilename.set(slug, filename);

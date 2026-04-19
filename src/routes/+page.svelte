@@ -11,7 +11,7 @@
 
 <main class="mx-auto min-h-screen max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
 	<section class="space-y-2">
-		<p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500">Posts</p>
+		<p class="text-xs font-medium tracking-[0.2em] text-slate-500 uppercase">Posts</p>
 		<h1 class="text-3xl font-semibold tracking-tight text-slate-950">Root summaries</h1>
 	</section>
 
@@ -22,7 +22,7 @@
 					<article class="space-y-3">
 						<div class="flex flex-wrap items-start justify-between gap-3">
 							<div class="min-w-0 space-y-2">
-								<h2 class="text-lg font-semibold leading-snug text-slate-950">
+								<h2 class="text-lg leading-snug font-semibold text-slate-950">
 									<a
 										class="transition hover:text-sky-700"
 										href={resolve('/posts/[slug]', { slug: post.slug })}
@@ -37,7 +37,9 @@
 							</div>
 
 							{#if post.pin}
-								<span class="inline-flex shrink-0 items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">
+								<span
+									class="inline-flex shrink-0 items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800"
+								>
 									Pinned
 								</span>
 							{/if}
@@ -69,7 +71,9 @@
 						{#if post.tags.length > 0}
 							<div class="flex flex-wrap gap-2">
 								{#each post.tags as tag (tag)}
-									<span class="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600">
+									<span
+										class="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600"
+									>
 										#{tag}
 									</span>
 								{/each}
