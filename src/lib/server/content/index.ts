@@ -1,0 +1,1 @@
+export { loadPosts } from './loader';
