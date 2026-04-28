@@ -1,7 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { markdownToHtml } from './markdown';
+import { calculateReadingTime, renderMarkdown } from './markdown';
 import { blogPostFrontmatterSchema, type BlogPost, type BlogPostSummary } from './schema';
 
 const BLOG_CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'blog');
@@ -40,7 +40,9 @@ function formatValidationError(filePath: string, error: unknown): Error {
 	return new Error(`Invalid frontmatter in ${filePath}`);
 }
 
-function sortPublicPosts(posts: BlogPost[]): BlogPost[] {
+function sortPublicPosts<T extends Pick<BlogPostSummary, 'draft' | 'pin' | 'publishedAt'>>(
+	posts: T[]
+): T[] {
 	return posts.toSorted((first, second) => {
 		if (first.pin !== second.pin) {
 			return first.pin ? -1 : 1;
@@ -50,22 +52,8 @@ function sortPublicPosts(posts: BlogPost[]): BlogPost[] {
 	});
 }
 
-function toSummary(post: BlogPost): BlogPostSummary {
-	return {
-		slug: post.slug,
-		title: post.title,
-		description: post.description,
-		publishedAt: post.publishedAt,
-		updatedAt: post.updatedAt,
-		tags: post.tags,
-		category: post.category,
-		draft: post.draft,
-		pin: post.pin
-	};
-}
-
-function getPublicPostSummaries(posts: BlogPost[]): BlogPostSummary[] {
-	return sortPublicPosts(posts.filter((post) => !post.draft)).map((post) => toSummary(post));
+function getPublicPostSummaries(posts: BlogPostSummary[]): BlogPostSummary[] {
+	return sortPublicPosts(posts.filter((post) => !post.draft));
 }
 
 function sortCountEntries<T extends { count: number }>(
@@ -81,11 +69,42 @@ function sortCountEntries<T extends { count: number }>(
 	});
 }
 
-async function parsePostFile(filename: string): Promise<BlogPost> {
+async function readPostSource(
+	filename: string
+): Promise<{ filePath: string; content: string; data: unknown }> {
 	const filePath = path.join(BLOG_CONTENT_DIR, filename);
 	const source = await readFile(filePath, 'utf8');
 	const parsed = matter(source);
-	const frontmatterResult = blogPostFrontmatterSchema.safeParse(parsed.data);
+
+	return {
+		filePath,
+		content: parsed.content,
+		data: parsed.data
+	};
+}
+
+async function parsePostFile(filename: string): Promise<BlogPost> {
+	const { filePath, content, data } = await readPostSource(filename);
+	const frontmatterResult = blogPostFrontmatterSchema.safeParse(data);
+
+	if (!frontmatterResult.success) {
+		throw formatValidationError(filePath, frontmatterResult.error);
+	}
+
+	const renderedMarkdown = await renderMarkdown(content);
+
+	return {
+		...frontmatterResult.data,
+		slug: slugFromFilename(filename),
+		html: renderedMarkdown.html,
+		toc: renderedMarkdown.toc,
+		readingTime: renderedMarkdown.readingTime
+	};
+}
+
+async function parsePostSummaryFile(filename: string): Promise<BlogPostSummary> {
+	const { filePath, content, data } = await readPostSource(filename);
+	const frontmatterResult = blogPostFrontmatterSchema.safeParse(data);
 
 	if (!frontmatterResult.success) {
 		throw formatValidationError(filePath, frontmatterResult.error);
@@ -94,28 +113,34 @@ async function parsePostFile(filename: string): Promise<BlogPost> {
 	return {
 		...frontmatterResult.data,
 		slug: slugFromFilename(filename),
-		html: await markdownToHtml(parsed.content)
+		readingTime: calculateReadingTime(content)
 	};
 }
 
-async function loadAllPosts(): Promise<BlogPost[]> {
+async function listMarkdownFilenames(): Promise<string[]> {
 	const filenames = await readdir(BLOG_CONTENT_DIR);
-	const markdownFilenames = filenames.filter((filename) => filename.endsWith('.md')).toSorted();
 
-	return Promise.all(markdownFilenames.map((filename) => parsePostFile(filename)));
+	return filenames.filter((filename) => filename.endsWith('.md')).toSorted();
 }
 
 export async function getPosts(): Promise<BlogPostSummary[]> {
-	const posts = await loadAllPosts();
+	const filenames = await listMarkdownFilenames();
+	const posts = await Promise.all(filenames.map((filename) => parsePostSummaryFile(filename)));
 
 	return getPublicPostSummaries(posts);
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
-	const posts = await loadAllPosts();
-	const post = posts.find((candidate) => candidate.slug === slug && !candidate.draft);
+	const filenames = await listMarkdownFilenames();
+	const filename = filenames.find((candidate) => slugFromFilename(candidate) === slug);
 
-	return post ?? null;
+	if (!filename) {
+		return null;
+	}
+
+	const post = await parsePostFile(filename);
+
+	return post.draft ? null : post;
 }
 
 export async function getTags(): Promise<TagCount[]> {

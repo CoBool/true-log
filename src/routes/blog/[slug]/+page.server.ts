@@ -22,6 +22,8 @@ export const load: PageServerLoad = async ({ params }) => {
 			publishedAt: post.publishedAt,
 			updatedAt: post.updatedAt,
 			tags: post.tags,
+			readingTime: post.readingTime,
+			toc: post.toc,
 			html: post.html
 		}
 	};

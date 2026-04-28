@@ -35,9 +35,22 @@ export const blogPostFrontmatterSchema = z.object({
 
 export type BlogPostFrontmatter = z.infer<typeof blogPostFrontmatterSchema>;
 
+export type TableOfContentsItem = {
+	id: string;
+	text: string;
+	depth: 2 | 3;
+};
+
+export type ReadingTime = {
+	minutes: number;
+	text: string;
+};
+
 export type BlogPost = BlogPostFrontmatter & {
 	slug: string;
 	html: string;
+	toc: TableOfContentsItem[];
+	readingTime: ReadingTime;
 };
 
-export type BlogPostSummary = Omit<BlogPost, 'html'>;
+export type BlogPostSummary = Omit<BlogPost, 'html' | 'toc'>;
