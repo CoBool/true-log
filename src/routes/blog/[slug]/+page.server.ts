@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getPostBySlug, getPosts } from '$lib/content/index.server';
+import { getPostBySlug, getPostNavigation, getPosts } from '$lib/content/index.server';
 
 import type { EntryGenerator, PageServerLoad } from './$types';
 
@@ -22,6 +22,8 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, 'Post not found');
 	}
 
+	const navigation = await getPostNavigation(post.slug);
+
 	return {
 		post: {
 			slug: post.slug,
@@ -33,6 +35,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			readingTime: post.readingTime,
 			toc: post.toc,
 			html: post.html
-		}
+		},
+		navigation
 	};
 };
