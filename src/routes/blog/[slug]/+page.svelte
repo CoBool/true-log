@@ -75,7 +75,10 @@
 			{@html data.post.html}
 		</article>
 
-		<nav class="mt-12 grid gap-4 border-t border-gray-200 pt-6 sm:grid-cols-2" aria-label="Post navigation">
+		<nav
+			class="mt-12 grid gap-4 border-t border-gray-200 pt-6 sm:grid-cols-2"
+			aria-label="Post navigation"
+		>
 			{#if data.navigation.previous}
 				<a
 					class="rounded-lg border border-gray-200 bg-white p-4 text-gray-700 no-underline hover:border-indigo-200 hover:text-indigo-700"

@@ -62,7 +62,9 @@ function getPublicPostSummaries(posts: BlogPostSummary[]): BlogPostSummary[] {
 }
 
 function sortPostsByPublishedAtDesc(posts: BlogPostSummary[]): BlogPostSummary[] {
-	return posts.toSorted((first, second) => second.publishedAt.getTime() - first.publishedAt.getTime());
+	return posts.toSorted(
+		(first, second) => second.publishedAt.getTime() - first.publishedAt.getTime()
+	);
 }
 
 function sortCountEntries<T extends { count: number }>(
