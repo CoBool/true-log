@@ -4,7 +4,7 @@ description: 'plain Markdown 기반 블로그의 첫 번째 공개 글입니다.
 publishedAt: '2026-04-27'
 updatedAt: '2026-04-27'
 tags: ['sveltekit', 'markdown']
-categories: ['frontend', 'sveltekit']
+category: 'frontend'
 draft: false
 pin: true
 ---

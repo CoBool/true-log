@@ -24,7 +24,11 @@ export const blogPostFrontmatterSchema = z.object({
 	publishedAt: dateStringSchema,
 	updatedAt: dateStringSchema.optional(),
 	tags: z.array(z.string().trim().min(1)).min(1),
-	categories: z.array(z.string().trim().min(1)).default([]),
+	category: z
+		.string()
+		.trim()
+		.min(1)
+		.refine((value) => !value.includes('/'), 'Category cannot include /'),
 	draft: z.boolean(),
 	pin: z.boolean().default(false)
 });

@@ -3,7 +3,7 @@ title: 'Content Layer 구현 노트'
 description: '파일 시스템 scan, frontmatter validation, Markdown 변환 흐름을 정리합니다.'
 publishedAt: '2026-04-26'
 tags: ['content-layer', 'typescript']
-categories: ['architecture']
+category: 'architecture'
 draft: false
 pin: false
 ---
