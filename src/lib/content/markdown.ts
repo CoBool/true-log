@@ -1,5 +1,6 @@
 import { unified } from 'unified';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -98,6 +99,10 @@ export async function renderMarkdown(markdown: string): Promise<RenderedMarkdown
 	const file = await unified()
 		.use(remarkParse)
 		.use(remarkRehype)
+		.use(rehypePrettyCode, {
+			theme: 'github-dark-dimmed',
+			keepBackground: false
+		})
 		.use(rehypeSlug)
 		.use(() => collectTableOfContents(toc))
 		.use(rehypeAutolinkHeadings, {

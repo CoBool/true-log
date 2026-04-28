@@ -21,3 +21,13 @@ pin: false
 ### 공개 데이터
 
 클라이언트에는 목록과 상세 화면에 필요한 데이터만 전달합니다.
+
+## 렌더링 예시
+
+```ts
+type BlogPostSummary = {
+	slug: string;
+	title: string;
+	publishedAt: Date;
+};
+```
