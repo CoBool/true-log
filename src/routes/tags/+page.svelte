@@ -24,7 +24,7 @@
 				<li>
 					<a
 						class="inline-flex rounded-full border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 no-underline hover:border-indigo-600 hover:text-indigo-600 focus-visible:border-indigo-600 focus-visible:text-indigo-600 focus-visible:outline-none"
-						href={resolve('/tags/[tag]', { tag: encodeURIComponent(tag.tag) })}
+						href={resolve('/tags/[tag]', { tag: tag.tag })}
 					>
 						{tag.tag}
 						<span class="ml-2 text-gray-500">{tag.count}</span>

@@ -24,7 +24,7 @@
 				<li>
 					<a
 						class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white p-4 text-inherit no-underline hover:border-indigo-600 focus-visible:border-indigo-600 focus-visible:outline-none"
-						href={resolve('/categories/[category]', { category: category.slug })}
+						href={resolve('/categories/[category]', { category: category.category })}
 					>
 						<span class="font-semibold text-gray-900">{category.category}</span>
 						<span class="text-sm text-gray-500">{category.count} posts</span>

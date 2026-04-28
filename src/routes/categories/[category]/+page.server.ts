@@ -1,6 +1,14 @@
-import { getPostsByCategory } from '$lib/content/index.server';
+import { getCategories, getPostsByCategory } from '$lib/content/index.server';
 
-import type { PageServerLoad } from './$types';
+import type { EntryGenerator, PageServerLoad } from './$types';
+
+export const entries: EntryGenerator = async () => {
+	const categories = await getCategories();
+
+	return categories.map((category) => ({
+		category: category.category
+	}));
+};
 
 export const load: PageServerLoad = async ({ params }) => {
 	const category = params.category;

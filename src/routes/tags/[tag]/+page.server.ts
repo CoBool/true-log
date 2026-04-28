@@ -1,6 +1,14 @@
-import { getPostsByTag } from '$lib/content/index.server';
+import { getPostsByTag, getTags } from '$lib/content/index.server';
 
-import type { PageServerLoad } from './$types';
+import type { EntryGenerator, PageServerLoad } from './$types';
+
+export const entries: EntryGenerator = async () => {
+	const tags = await getTags();
+
+	return tags.map((tag) => ({
+		tag: tag.tag
+	}));
+};
 
 export const load: PageServerLoad = async ({ params }) => {
 	const posts = await getPostsByTag(params.tag);
