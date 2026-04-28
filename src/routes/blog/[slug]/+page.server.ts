@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import { getPostBySlug, getPostNavigation, getPosts } from '$lib/content/index.server';
 
 import type { EntryGenerator, PageServerLoad } from './$types';
+import type { BlogPostSummary } from '$lib/content/index.server';
 
 export const entries: EntryGenerator = async () => {
 	const posts = await getPosts();
@@ -10,6 +11,19 @@ export const entries: EntryGenerator = async () => {
 		slug: post.slug
 	}));
 };
+
+function toNavigationPost(post: BlogPostSummary | null) {
+	if (!post) {
+		return null;
+	}
+
+	return {
+		slug: post.slug,
+		title: post.title,
+		description: post.description,
+		publishedAt: post.publishedAt
+	};
+}
 
 export const load: PageServerLoad = async ({ params }) => {
 	if (!params.slug) {
@@ -36,6 +50,9 @@ export const load: PageServerLoad = async ({ params }) => {
 			toc: post.toc,
 			html: post.html
 		},
-		navigation
+		navigation: {
+			previous: toNavigationPost(navigation.previous),
+			next: toNavigationPost(navigation.next)
+		}
 	};
 };
