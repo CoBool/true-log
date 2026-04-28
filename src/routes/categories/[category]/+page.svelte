@@ -12,8 +12,8 @@
 </script>
 
 <svelte:head>
-	<title>{data.categoryPath.join(' / ')} | true_log</title>
-	<meta name="description" content={`Posts in ${data.categoryPath.join(' / ')}`} />
+	<title>{data.category} | true_log</title>
+	<meta name="description" content={`Posts in ${data.category}`} />
 </svelte:head>
 
 <main class="mx-auto w-full max-w-4xl px-4 py-12 text-gray-800">
@@ -27,15 +27,12 @@
 	<section class="mb-8" aria-labelledby="category-title">
 		<p class="mb-2 text-sm font-bold text-indigo-600 uppercase">Category</p>
 		<h1 id="category-title" class="text-4xl leading-tight font-bold text-gray-950 sm:text-5xl">
-			{data.categoryPath.join(' / ')}
+			{data.category}
 		</h1>
 	</section>
 
 	{#if data.posts.length > 0}
-		<ul
-			class="m-0 grid list-none gap-4 p-0"
-			aria-label={`Posts in ${data.categoryPath.join(' / ')}`}
-		>
+		<ul class="m-0 grid list-none gap-4 p-0" aria-label={`Posts in ${data.category}`}>
 			{#each data.posts as post (post.slug)}
 				<li>
 					<a

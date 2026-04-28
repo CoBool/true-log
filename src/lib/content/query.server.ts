@@ -12,8 +12,8 @@ export type TagCount = {
 };
 
 export type CategoryCount = {
-	path: string[];
-	slugPath: string;
+	category: string;
+	slug: string;
 	count: number;
 };
 
@@ -58,7 +58,7 @@ function toSummary(post: BlogPost): BlogPostSummary {
 		publishedAt: post.publishedAt,
 		updatedAt: post.updatedAt,
 		tags: post.tags,
-		categories: post.categories,
+		category: post.category,
 		draft: post.draft,
 		pin: post.pin
 	};
@@ -66,10 +66,6 @@ function toSummary(post: BlogPost): BlogPostSummary {
 
 function getPublicPostSummaries(posts: BlogPost[]): BlogPostSummary[] {
 	return sortPublicPosts(posts.filter((post) => !post.draft)).map((post) => toSummary(post));
-}
-
-function slugPathFromCategoryPath(categoryPath: string[]): string {
-	return categoryPath.map((segment) => encodeURIComponent(segment)).join('/');
 }
 
 function sortCountEntries<T extends { count: number }>(
@@ -149,28 +145,23 @@ export async function getCategories(): Promise<CategoryCount[]> {
 	const categories = new Map<string, CategoryCount>();
 
 	for (const post of posts) {
-		for (let depth = 1; depth <= post.categories.length; depth += 1) {
-			const categoryPath = post.categories.slice(0, depth);
-			const slugPath = slugPathFromCategoryPath(categoryPath);
-			const current = categories.get(slugPath);
+		const slug = encodeURIComponent(post.category);
+		const current = categories.get(slug);
 
-			categories.set(slugPath, {
-				path: categoryPath,
-				slugPath,
-				count: (current?.count ?? 0) + 1
-			});
-		}
+		categories.set(slug, {
+			category: post.category,
+			slug,
+			count: (current?.count ?? 0) + 1
+		});
 	}
 
-	return sortCountEntries(Array.from(categories.values()), (entry) => entry.slugPath);
+	return sortCountEntries(Array.from(categories.values()), (entry) => entry.category);
 }
 
-export async function getPostsByCategoryPath(categoryPath: string[]): Promise<BlogPostSummary[]> {
+export async function getPostsByCategory(category: string): Promise<BlogPostSummary[]> {
 	const posts = await getPosts();
 
-	return posts.filter((post) =>
-		categoryPath.every((category, index) => post.categories[index] === category)
-	);
+	return posts.filter((post) => post.category === category);
 }
 
 export async function getArchiveGroups(): Promise<ArchiveYearGroup[]> {

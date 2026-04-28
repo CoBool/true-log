@@ -3,7 +3,7 @@ export {
 	getCategories,
 	getPostBySlug,
 	getPosts,
-	getPostsByCategoryPath,
+	getPostsByCategory,
 	getPostsByTag,
 	getTags
 } from './query.server';

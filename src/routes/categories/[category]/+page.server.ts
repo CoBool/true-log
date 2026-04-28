@@ -1,13 +1,13 @@
-import { getPostsByCategoryPath } from '$lib/content/index.server';
+import { getPostsByCategory } from '$lib/content/index.server';
 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const categoryPath = params.category.split('/');
-	const posts = await getPostsByCategoryPath(categoryPath);
+	const category = params.category;
+	const posts = await getPostsByCategory(category);
 
 	return {
-		categoryPath,
+		category,
 		posts: posts.map((post) => ({
 			slug: post.slug,
 			title: post.title,
