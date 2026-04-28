@@ -1,7 +1,15 @@
 import { error } from '@sveltejs/kit';
-import { getPostBySlug } from '$lib/content/index.server';
+import { getPostBySlug, getPosts } from '$lib/content/index.server';
 
-import type { PageServerLoad } from './$types';
+import type { EntryGenerator, PageServerLoad } from './$types';
+
+export const entries: EntryGenerator = async () => {
+	const posts = await getPosts();
+
+	return posts.map((post) => ({
+		slug: post.slug
+	}));
+};
 
 export const load: PageServerLoad = async ({ params }) => {
 	if (!params.slug) {
