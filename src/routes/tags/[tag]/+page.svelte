@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { site } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -12,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>#{data.tag} | true_log</title>
+	<title>#{data.tag} | {site.name}</title>
 	<meta name="description" content={`Posts tagged ${data.tag}`} />
 </svelte:head>
 

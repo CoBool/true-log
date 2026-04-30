@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { site } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -12,20 +13,17 @@
 </script>
 
 <svelte:head>
-	<title>true_log</title>
-	<meta name="description" content="SvelteKit과 plain Markdown으로 만든 개발 블로그입니다." />
+	<title>{site.name}</title>
+	<meta name="description" content={site.description} />
 </svelte:head>
 
 <main class="mx-auto w-full max-w-5xl px-4 py-12 text-gray-800">
 	<section class="mb-10" aria-labelledby="home-title">
 		<p class="mb-2 text-sm font-bold text-indigo-600 uppercase">Markdown Blog</p>
 		<h1 id="home-title" class="mb-4 text-4xl leading-tight font-bold text-gray-950 sm:text-5xl">
-			true_log
+			{site.name}
 		</h1>
-		<p class="max-w-2xl text-lg leading-relaxed text-gray-600">
-			Chirpy의 정보 구조를 참고해 SvelteKit, TypeScript, plain Markdown으로 다시 만든 개발
-			블로그입니다.
-		</p>
+		<p class="max-w-2xl text-lg leading-relaxed text-gray-600">{site.description}</p>
 	</section>
 
 	<section aria-labelledby="latest-posts-title">

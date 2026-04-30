@@ -1,6 +1,10 @@
+<script lang="ts">
+	import { site } from '$lib/config/site';
+</script>
+
 <svelte:head>
-	<title>About | true_log</title>
-	<meta name="description" content="About true_log" />
+	<title>About | {site.name}</title>
+	<meta name="description" content={`About ${site.name}`} />
 </svelte:head>
 
 <main class="mx-auto w-full max-w-3xl px-4 py-12 text-gray-800">
@@ -9,14 +13,14 @@
 		aria-labelledby="about-title"
 	>
 		<p class="text-sm font-bold text-indigo-600 uppercase">About</p>
-		<h1 id="about-title">true_log</h1>
+		<h1 id="about-title">{site.name}</h1>
 		<p>
-			<code>true_log</code>는 SvelteKit, TypeScript, plain Markdown으로 구현하는 개발 블로그입니다.
+			<code>{site.name}</code> is a SvelteKit, TypeScript, and plain Markdown blog template.
 		</p>
 		<p>
-			Chirpy Jekyll Theme의 정보 구조와 개발 블로그 UX를 참고하지만, Jekyll, Ruby, Liquid, Bootstrap
-			구조를 복제하지 않습니다.
+			It is inspired by Chirpy's information architecture and technical writing experience, but does
+			not use Jekyll, Ruby, Liquid, or Bootstrap.
 		</p>
-		<p>초기 버전은 Markdown content layer, 공개 글 목록, 태그, 카테고리, 아카이브에 집중합니다.</p>
+		<p>The first version focuses on posts, categories, tags, and a Markdown content layer.</p>
 	</section>
 </main>

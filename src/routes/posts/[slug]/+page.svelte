@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { site } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -12,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.post.title} | true_log</title>
+	<title>{data.post.title} | {site.name}</title>
 	<meta name="description" content={data.post.description} />
 </svelte:head>
 
