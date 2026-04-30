@@ -37,7 +37,7 @@
 				<li>
 					<a
 						class="block rounded-lg border border-gray-300 bg-white p-5 text-inherit no-underline transition-colors hover:border-indigo-600 focus-visible:border-indigo-600 focus-visible:outline-none"
-						href={resolve('/blog/[slug]', { slug: post.slug })}
+						href={resolve('/posts/[slug]', { slug: post.slug })}
 					>
 						<div class="mb-3 flex flex-wrap gap-2 text-sm text-gray-500">
 							<time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time>

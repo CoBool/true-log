@@ -52,7 +52,7 @@
 										<li>
 											<a
 												class="flex flex-wrap items-baseline justify-between gap-2 text-inherit no-underline hover:text-indigo-600 focus-visible:text-indigo-600 focus-visible:outline-none"
-												href={resolve('/blog/[slug]', { slug: post.slug })}
+												href={resolve('/posts/[slug]', { slug: post.slug })}
 											>
 												<span class="font-semibold">{post.title}</span>
 												<time

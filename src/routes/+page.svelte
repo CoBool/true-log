@@ -31,7 +31,10 @@
 	<section aria-labelledby="latest-posts-title">
 		<div class="mb-4 flex flex-wrap items-end justify-between gap-3">
 			<h2 id="latest-posts-title" class="text-2xl font-bold text-gray-950">Latest posts</h2>
-			<a class="font-semibold text-indigo-600 no-underline hover:underline" href={resolve('/blog')}>
+			<a
+				class="font-semibold text-indigo-600 no-underline hover:underline"
+				href={resolve('/posts')}
+			>
 				View all posts
 			</a>
 		</div>
@@ -42,7 +45,7 @@
 					<li>
 						<a
 							class="block rounded-lg border border-gray-300 bg-white p-5 text-inherit no-underline transition-colors hover:border-indigo-600 focus-visible:border-indigo-600 focus-visible:outline-none"
-							href={resolve('/blog/[slug]', { slug: post.slug })}
+							href={resolve('/posts/[slug]', { slug: post.slug })}
 						>
 							<div class="mb-3 flex flex-wrap gap-2 text-sm text-gray-500">
 								<time datetime={post.publishedAt.toISOString()}>{formatDate(post.publishedAt)}</time

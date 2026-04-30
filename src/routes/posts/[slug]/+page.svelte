@@ -21,14 +21,14 @@
 >
 	<a
 		class="inline-flex font-bold text-indigo-600 no-underline hover:underline lg:col-span-2"
-		href={resolve('/blog')}
+		href={resolve('/posts')}
 	>
-		Back to blog
+		Back to posts
 	</a>
 
 	<div class="min-w-0">
 		<header class="mb-10">
-			<p class="mb-2 text-sm font-bold text-indigo-600 uppercase">Blog</p>
+			<p class="mb-2 text-sm font-bold text-indigo-600 uppercase">Posts</p>
 			<h1 class="mb-4 text-4xl leading-tight font-bold sm:text-5xl">{data.post.title}</h1>
 			<p class="mb-5 text-lg leading-relaxed text-gray-600">{data.post.description}</p>
 
@@ -82,7 +82,7 @@
 			{#if data.navigation.previous}
 				<a
 					class="rounded-lg border border-gray-200 bg-white p-4 text-gray-700 no-underline hover:border-indigo-200 hover:text-indigo-700"
-					href={resolve('/blog/[slug]', { slug: data.navigation.previous.slug })}
+					href={resolve('/posts/[slug]', { slug: data.navigation.previous.slug })}
 				>
 					<span class="mb-2 block text-xs font-bold text-gray-500 uppercase">Previous post</span>
 					<span class="block font-bold">{data.navigation.previous.title}</span>
@@ -97,7 +97,7 @@
 			{#if data.navigation.next}
 				<a
 					class="rounded-lg border border-gray-200 bg-white p-4 text-right text-gray-700 no-underline hover:border-indigo-200 hover:text-indigo-700"
-					href={resolve('/blog/[slug]', { slug: data.navigation.next.slug })}
+					href={resolve('/posts/[slug]', { slug: data.navigation.next.slug })}
 				>
 					<span class="mb-2 block text-xs font-bold text-gray-500 uppercase">Next post</span>
 					<span class="block font-bold">{data.navigation.next.title}</span>
