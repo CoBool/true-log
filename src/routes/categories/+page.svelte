@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { site } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 </script>
 
 <svelte:head>
-	<title>Categories | true_log</title>
-	<meta name="description" content="Browse true_log posts by category" />
+	<title>Categories | {site.name}</title>
+	<meta name="description" content={`Browse ${site.name} posts by category`} />
 </svelte:head>
 
 <main class="mx-auto w-full max-w-4xl px-4 py-12 text-gray-800">

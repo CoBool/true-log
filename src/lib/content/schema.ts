@@ -33,7 +33,13 @@ export const blogPostFrontmatterSchema = z.object({
 	pin: z.boolean().default(false)
 });
 
+export const contentPageFrontmatterSchema = z.object({
+	title: z.string().trim().min(1),
+	description: z.string().trim().min(1)
+});
+
 export type BlogPostFrontmatter = z.infer<typeof blogPostFrontmatterSchema>;
+export type ContentPageFrontmatter = z.infer<typeof contentPageFrontmatterSchema>;
 
 export type TableOfContentsItem = {
 	id: string;
@@ -54,3 +60,8 @@ export type BlogPost = BlogPostFrontmatter & {
 };
 
 export type BlogPostSummary = Omit<BlogPost, 'html' | 'toc'>;
+
+export type ContentPage = ContentPageFrontmatter & {
+	slug: string;
+	html: string;
+};

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { site } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -12,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Posts | true_log</title>
-	<meta name="description" content="Public true_log posts" />
+	<title>Posts | {site.name}</title>
+	<meta name="description" content={`Public ${site.name} posts`} />
 </svelte:head>
 
 <main class="mx-auto w-full max-w-4xl px-4 py-12 text-gray-800">

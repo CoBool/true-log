@@ -2,9 +2,17 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { calculateReadingTime, renderMarkdown } from './markdown';
-import { blogPostFrontmatterSchema, type BlogPost, type BlogPostSummary } from './schema';
+import {
+	blogPostFrontmatterSchema,
+	contentPageFrontmatterSchema,
+	type BlogPost,
+	type BlogPostSummary,
+	type ContentPage
+} from './schema';
 
 const BLOG_CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'blog');
+const PAGE_CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'pages');
+const CONTENT_PAGE_SLUG_PATTERN = /^[a-z0-9-]+$/;
 
 export type TagCount = {
 	tag: string;
@@ -83,6 +91,22 @@ async function readPostSource(
 	};
 }
 
+async function readPageSource(slug: string): Promise<{
+	filePath: string;
+	content: string;
+	data: unknown;
+}> {
+	const filePath = path.join(PAGE_CONTENT_DIR, `${slug}.md`);
+	const source = await readFile(filePath, 'utf8');
+	const parsed = matter(source);
+
+	return {
+		filePath,
+		content: parsed.content,
+		data: parsed.data
+	};
+}
+
 async function parsePostFile(filename: string): Promise<BlogPost> {
 	const { filePath, content, data } = await readPostSource(filename);
 	const frontmatterResult = blogPostFrontmatterSchema.safeParse(data);
@@ -128,6 +152,35 @@ export async function getPosts(): Promise<BlogPostSummary[]> {
 	const posts = await Promise.all(filenames.map((filename) => parsePostSummaryFile(filename)));
 
 	return getPublicPostSummaries(posts);
+}
+
+export async function getContentPageBySlug(slug: string): Promise<ContentPage | null> {
+	if (!CONTENT_PAGE_SLUG_PATTERN.test(slug)) {
+		return null;
+	}
+
+	try {
+		const { filePath, content, data } = await readPageSource(slug);
+		const frontmatterResult = contentPageFrontmatterSchema.safeParse(data);
+
+		if (!frontmatterResult.success) {
+			throw formatValidationError(filePath, frontmatterResult.error);
+		}
+
+		const renderedMarkdown = await renderMarkdown(content);
+
+		return {
+			...frontmatterResult.data,
+			slug,
+			html: renderedMarkdown.html
+		};
+	} catch (error) {
+		if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+			return null;
+		}
+
+		throw error;
+	}
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
