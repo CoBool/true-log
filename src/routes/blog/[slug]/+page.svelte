@@ -82,7 +82,7 @@
 			{#if data.navigation.previous}
 				<a
 					class="rounded-lg border border-gray-200 bg-white p-4 text-gray-700 no-underline hover:border-indigo-200 hover:text-indigo-700"
-					href={resolve(`/blog/${data.navigation.previous.slug}`)}
+					href={resolve('/blog/[slug]', { slug: data.navigation.previous.slug })}
 				>
 					<span class="mb-2 block text-xs font-bold text-gray-500 uppercase">Previous post</span>
 					<span class="block font-bold">{data.navigation.previous.title}</span>
@@ -97,7 +97,7 @@
 			{#if data.navigation.next}
 				<a
 					class="rounded-lg border border-gray-200 bg-white p-4 text-right text-gray-700 no-underline hover:border-indigo-200 hover:text-indigo-700"
-					href={resolve(`/blog/${data.navigation.next.slug}`)}
+					href={resolve('/blog/[slug]', { slug: data.navigation.next.slug })}
 				>
 					<span class="mb-2 block text-xs font-bold text-gray-500 uppercase">Next post</span>
 					<span class="block font-bold">{data.navigation.next.title}</span>
