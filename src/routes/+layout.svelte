@@ -7,10 +7,9 @@
 
 	const navigationItems = [
 		{ href: resolve('/'), label: 'Home' },
-		{ href: resolve('/blog'), label: 'Blog' },
+		{ href: resolve('/posts'), label: 'Posts' },
 		{ href: resolve('/categories'), label: 'Categories' },
 		{ href: resolve('/tags'), label: 'Tags' },
-		{ href: resolve('/archives'), label: 'Archives' },
 		{ href: resolve('/about'), label: 'About' }
 	];
 </script>

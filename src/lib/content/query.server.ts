@@ -17,15 +17,9 @@ export type CategoryCount = {
 	count: number;
 };
 
-export type ArchiveMonthGroup = {
-	year: number;
-	month: number;
-	posts: BlogPostSummary[];
-};
-
-export type ArchiveYearGroup = {
-	year: number;
-	months: ArchiveMonthGroup[];
+export type PostNavigation = {
+	previous: BlogPostSummary | null;
+	next: BlogPostSummary | null;
 };
 
 function slugFromFilename(filename: string): string {
@@ -54,6 +48,12 @@ function sortPublicPosts<T extends Pick<BlogPostSummary, 'draft' | 'pin' | 'publ
 
 function getPublicPostSummaries(posts: BlogPostSummary[]): BlogPostSummary[] {
 	return sortPublicPosts(posts.filter((post) => !post.draft));
+}
+
+function sortPostsByPublishedAtDesc(posts: BlogPostSummary[]): BlogPostSummary[] {
+	return posts.toSorted(
+		(first, second) => second.publishedAt.getTime() - first.publishedAt.getTime()
+	);
 }
 
 function sortCountEntries<T extends { count: number }>(
@@ -143,6 +143,23 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 	return post.draft ? null : post;
 }
 
+export async function getPostNavigation(slug: string): Promise<PostNavigation> {
+	const posts = sortPostsByPublishedAtDesc(await getPosts());
+	const currentIndex = posts.findIndex((post) => post.slug === slug);
+
+	if (currentIndex === -1) {
+		return {
+			previous: null,
+			next: null
+		};
+	}
+
+	return {
+		previous: posts[currentIndex + 1] ?? null,
+		next: posts[currentIndex - 1] ?? null
+	};
+}
+
 export async function getTags(): Promise<TagCount[]> {
 	const posts = await getPosts();
 	const counts = new Map<string, number>();
@@ -187,29 +204,4 @@ export async function getPostsByCategory(category: string): Promise<BlogPostSumm
 	const posts = await getPosts();
 
 	return posts.filter((post) => post.category === category);
-}
-
-export async function getArchiveGroups(): Promise<ArchiveYearGroup[]> {
-	const posts = await getPosts();
-	const years = new Map<number, Map<number, BlogPostSummary[]>>();
-
-	for (const post of posts) {
-		const year = post.publishedAt.getUTCFullYear();
-		const month = post.publishedAt.getUTCMonth() + 1;
-		const yearGroup = years.get(year) ?? new Map<number, BlogPostSummary[]>();
-		const monthGroup = yearGroup.get(month) ?? [];
-
-		monthGroup.push(post);
-		yearGroup.set(month, monthGroup);
-		years.set(year, yearGroup);
-	}
-
-	return Array.from(years, ([year, months]) => ({
-		year,
-		months: Array.from(months, ([month, postsInMonth]) => ({
-			year,
-			month,
-			posts: postsInMonth
-		})).toSorted((first, second) => second.month - first.month)
-	})).toSorted((first, second) => second.year - first.year);
 }
